@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>/mauler aka Paulo</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2014-08-20T13:37:00-03:00</updated><entry><title>Hello World !</title><link href="/hello-world.html" rel="alternate"></link><updated>2014-08-20T13:37:00-03:00</updated><author><name>paulo</name></author><id>tag:,2014-08-20:hello-world.html</id><summary type="html">&lt;p&gt;This the classic phrase for your first step in any technology. A blog is not a
+&lt;em&gt;language&lt;/em&gt; but in this context it fits.&lt;/p&gt;
+&lt;p&gt;Well, the idea behing this blog it's to avoid spam of copy/paste links to my
+friends via email or instant messenger. I hope that they add this blog to their
+RSS reader.&lt;/p&gt;
+&lt;p&gt;My posts will be usually about the projects or ideas that I am working on.&lt;/p&gt;
+&lt;p&gt;Show time !&lt;/p&gt;</summary></entry></feed>
