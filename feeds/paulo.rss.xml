@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>/mauler aka Paulo</title><link>/</link><description></description><atom:link href="/feeds/paulo.rss.xml" rel="self"></atom:link><lastBuildDate>Wed, 20 Aug 2014 13:37:00 -0300</lastBuildDate><item><title>Hello World !</title><link>/hello-world.html</link><description>&lt;p&gt;This the classic phrase for your first step in any technology. A blog is not a
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>/mauler aka Paulo</title><link>http://mauler.github.io/</link><description></description><atom:link href="http://mauler.github.io/feeds/paulo.rss.xml" rel="self"></atom:link><lastBuildDate>Wed, 20 Aug 2014 13:37:00 -0300</lastBuildDate><item><title>Hello World !</title><link>http://mauler.github.io/hello-world.html</link><description>&lt;p&gt;This the classic phrase for your first step in any technology. A blog is not a
 &lt;em&gt;language&lt;/em&gt; but in this context it fits.&lt;/p&gt;
 &lt;p&gt;Well, the idea behing this blog it's to avoid spam of copy/paste links to my
 friends via email or instant messenger. I hope that they add this blog to their
 RSS reader.&lt;/p&gt;
 &lt;p&gt;My posts will be usually about the projects or ideas that I am working on.&lt;/p&gt;
-&lt;p&gt;Show time !&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">paulo</dc:creator><pubDate>Wed, 20 Aug 2014 13:37:00 -0300</pubDate><guid>tag:,2014-08-20:hello-world.html</guid></item></channel></rss>
+&lt;p&gt;Show time !&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">paulo</dc:creator><pubDate>Wed, 20 Aug 2014 13:37:00 -0300</pubDate><guid>tag:mauler.github.io,2014-08-20:hello-world.html</guid></item></channel></rss>
