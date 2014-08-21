@@ -1,5 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>/mauler aka Paulo</title><link href="http://mauler.github.io/" rel="alternate"></link><link href="http://mauler.github.io/feeds/paulo.atom.xml" rel="self"></link><id>http://mauler.github.io/</id><updated>2014-08-20T13:37:00-03:00</updated><entry><title>Hello World !</title><link href="http://mauler.github.io/hello-world.html" rel="alternate"></link><updated>2014-08-20T13:37:00-03:00</updated><author><name>paulo</name></author><id>tag:mauler.github.io,2014-08-20:hello-world.html</id><summary type="html">&lt;p&gt;This the classic phrase for your first step in any technology. A blog is not a
+<feed xmlns="http://www.w3.org/2005/Atom"><title>/mauler aka Paulo</title><link href="http://mauler.github.io/" rel="alternate"></link><link href="http://mauler.github.io/feeds/paulo.atom.xml" rel="self"></link><id>http://mauler.github.io/</id><updated>2014-08-21T13:37:00-03:00</updated><entry><title>Introduction to django-ssiexport (protoype)</title><link href="http://mauler.github.io/introduction-to-django-ssiexport-protoype.html" rel="alternate"></link><updated>2014-08-21T13:37:00-03:00</updated><author><name>paulo</name></author><id>tag:mauler.github.io,2014-08-21:introduction-to-django-ssiexport-protoype.html</id><summary type="html">&lt;h3&gt;O que é django-ssiexport ?&lt;/h3&gt;
+&lt;p&gt;É um app que irá ajudar a exportar seu projeto de editoração de conteúdo (portals)
+como html estático para resolver todos os problemas de performance e muito acesso.&lt;/p&gt;
+&lt;p&gt;Procurando pela internet o &lt;em&gt;único&lt;/em&gt; que achei e pretende fazer as mesmas coisas é
+&lt;a href="https://github.com/mtigas/django-medusa"&gt;django-medusa&lt;/a&gt;. Porém ele apenas exporta
+as urls declaradas ou por queryset (usando a url retornada pelo get_absolute_url).&lt;/p&gt;
+&lt;p&gt;Para situações simples ele realmente funciona bem, porém como sabemos uma página de conteúdo em um portal é montada não apenas com um conteúdo, algumas vezes itens relacionados (que aparecem em todo o site) fazem parte (99% das vezes) da página.&lt;/p&gt;
+&lt;p&gt;Começando pela idéia do &lt;strong&gt;django-medusa&lt;/strong&gt; o objetivo é chegar uma boa lógica de geração de conteúdo estático a ponto de que ao alterar o título de um conteúdo apenas onde ele aparece que iremos reescrever o conteúdo estático.&lt;/p&gt;
+&lt;p&gt;Ao alcançar este objetivo iremos para o próximo passo que será conseguir gerar de forma
+granular o conteúdo estático. Exemplo, se uma template é chamada como include em vários locais teriamos ela armazenada em disco apenas uma vez.&lt;/p&gt;
+&lt;p&gt;A cereja do bolo será quando conseguirmos usar &lt;strong&gt;todo&lt;/strong&gt; o sistema de geração de conteúdo
+estático sem precisar mudar a forma em que programamos ou seja sem usar a todos momento as templatetags necessárias para declarar os conteúdos usados no arquivo de conteúdo estático.&lt;/p&gt;
+&lt;h3&gt;Primeira release (v0.1)&lt;/h3&gt;
+&lt;p&gt;Na primeira versão melhoraremos a lógica do &lt;strong&gt;django-medusa&lt;/strong&gt; armazenando as
+templates usadas para gerar o conteúdo estático e os models relacionados aquele conteúdo.&lt;/p&gt;
+&lt;p&gt;O setup para usar o aplicativo seria algo assim, criar um arquivo &lt;strong&gt;export.py&lt;/strong&gt; na pasta do app. O conteúdo dele seria algo parecido com:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;myapp.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Post&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;PostExport&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_urls&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_aboslute_url&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;Post&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;published&lt;/span&gt;&lt;span class="p"&gt;()]&lt;/span&gt;
+
+
+&lt;span class="n"&gt;exporters&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;PostExport&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Imagine que no &lt;em&gt;models.py&lt;/em&gt; existe um model chamado &lt;strong&gt;Image&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.db&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Post&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;pass&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Image&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;post&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Post&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Para declarar que as instâncias de &lt;strong&gt;Image&lt;/strong&gt; estão relacionadas ao &lt;strong&gt;Post&lt;/strong&gt; na template
+&lt;em&gt;post_detail.html&lt;/em&gt; podemos declarar de duas formas.&lt;/p&gt;
+&lt;p&gt;Usando queryset:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;load&lt;/span&gt; &lt;span class="nv"&gt;ssiexport_tags&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+
+&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;watch&lt;/span&gt; &lt;span class="nv"&gt;post.image_set.all&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+
+&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;image&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="nv"&gt;object.image_set.all&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+&lt;span class="x"&gt;    &amp;lt;img src=&amp;quot;&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;image.file.url&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;&amp;quot; /&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endfor&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Ou pela instância do Model:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;load&lt;/span&gt; &lt;span class="nv"&gt;ssiexport_tags&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+
+&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;image&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="nv"&gt;object.image_set.all&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+&lt;span class="x"&gt;    &lt;/span&gt;&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;watch&lt;/span&gt; &lt;span class="nv"&gt;image&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+&lt;span class="x"&gt;    &amp;lt;img src=&amp;quot;&lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;image.file.url&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;&lt;span class="x"&gt;&amp;quot; /&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;endfor&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+
+&lt;span class="x"&gt;class Post(models.Model):&lt;/span&gt;
+&lt;span class="x"&gt;    pass&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;A templatetag &lt;strong&gt;watch&lt;/strong&gt; irá cuidar de declarar que aquele o conteúdo daquele model interfere no conteúdo renderizado (estático) para aquela URL.&lt;/p&gt;
+&lt;p&gt;A declaração de &lt;strong&gt;templates&lt;/strong&gt; usadas é feita de forma automática da mesma forma que os
+tests do django fazem.&lt;/p&gt;
+&lt;p&gt;Bem, esta á a idéia de primeira release, como ela irá funcionar. Criarei mais posts
+sobre como iremos trabalhar o restante das idéias.&lt;/p&gt;</summary><category term="hightraffic"></category></entry><entry><title>Hello World !</title><link href="http://mauler.github.io/hello-world.html" rel="alternate"></link><updated>2014-08-20T13:37:00-03:00</updated><author><name>paulo</name></author><id>tag:mauler.github.io,2014-08-20:hello-world.html</id><summary type="html">&lt;p&gt;This the classic phrase for your first step in any technology. A blog is not a
 &lt;em&gt;language&lt;/em&gt; but in this context it fits.&lt;/p&gt;
 &lt;p&gt;Well, the idea behing this blog it's to avoid spam of copy/paste links to my
 friends via email or instant messenger. I hope that they add this blog to their

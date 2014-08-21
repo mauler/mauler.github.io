@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+        <title>Introduction to django-ssiexport (protoype)</title>
+        <meta charset="utf-8" />
+        <link href="http://mauler.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="/mauler aka Paulo Full Atom Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="./theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="./theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="./theme/pygment.css" />
+
+        <script src="./theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="./">/mauler aka Paulo <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="./">Home</a></li>
+
+                <li><a href="./pages/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="./introduction-to-django-ssiexport-protoype.html" rel="bookmark"
+                   title="Permalink to Introduction to django-ssiexport (protoype)">Introduction to django-ssiexport (protoype)</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2014-08-21T13:37:00">
+                Thu 21 August 2014
+              </abbr>
+              <address class="vcard author">
+                By <a class="url fn" href="./author/paulo.html">paulo</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <h3>O que é django-ssiexport ?</h3>
+<p>É um app que irá ajudar a exportar seu projeto de editoração de conteúdo (portals)
+como html estático para resolver todos os problemas de performance e muito acesso.</p>
+<p>Procurando pela internet o <em>único</em> que achei e pretende fazer as mesmas coisas é
+<a href="https://github.com/mtigas/django-medusa">django-medusa</a>. Porém ele apenas exporta
+as urls declaradas ou por queryset (usando a url retornada pelo get_absolute_url).</p>
+<p>Para situações simples ele realmente funciona bem, porém como sabemos uma página de conteúdo em um portal é montada não apenas com um conteúdo, algumas vezes itens relacionados (que aparecem em todo o site) fazem parte (99% das vezes) da página.</p>
+<p>Começando pela idéia do <strong>django-medusa</strong> o objetivo é chegar uma boa lógica de geração de conteúdo estático a ponto de que ao alterar o título de um conteúdo apenas onde ele aparece que iremos reescrever o conteúdo estático.</p>
+<p>Ao alcançar este objetivo iremos para o próximo passo que será conseguir gerar de forma
+granular o conteúdo estático. Exemplo, se uma template é chamada como include em vários locais teriamos ela armazenada em disco apenas uma vez.</p>
+<p>A cereja do bolo será quando conseguirmos usar <strong>todo</strong> o sistema de geração de conteúdo
+estático sem precisar mudar a forma em que programamos ou seja sem usar a todos momento as templatetags necessárias para declarar os conteúdos usados no arquivo de conteúdo estático.</p>
+<h3>Primeira release (v0.1)</h3>
+<p>Na primeira versão melhoraremos a lógica do <strong>django-medusa</strong> armazenando as
+templates usadas para gerar o conteúdo estático e os models relacionados aquele conteúdo.</p>
+<p>O setup para usar o aplicativo seria algo assim, criar um arquivo <strong>export.py</strong> na pasta do app. O conteúdo dele seria algo parecido com:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">myapp.models</span> <span class="kn">import</span> <span class="n">Post</span>
+
+<span class="k">class</span> <span class="nc">PostExport</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_urls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">get_aboslute_url</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">Post</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">published</span><span class="p">()]</span>
+
+
+<span class="n">exporters</span> <span class="o">=</span> <span class="p">(</span><span class="n">PostExport</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+
+
+<p>Imagine que no <em>models.py</em> existe um model chamado <strong>Image</strong>:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Post</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s">&quot;Post&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Para declarar que as instâncias de <strong>Image</strong> estão relacionadas ao <strong>Post</strong> na template
+<em>post_detail.html</em> podemos declarar de duas formas.</p>
+<p>Usando queryset:</p>
+<div class="highlight"><pre><span class="cp">{%</span> <span class="k">load</span> <span class="nv">ssiexport_tags</span> <span class="cp">%}</span><span class="x"></span>
+
+<span class="cp">{%</span> <span class="k">watch</span> <span class="nv">post.image_set.all</span> <span class="cp">%}</span><span class="x"></span>
+
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">image</span> <span class="k">in</span> <span class="nv">object.image_set.all</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;img src=&quot;</span><span class="cp">{{</span> <span class="nv">image.file.url</span> <span class="cp">}}</span><span class="x">&quot; /&gt;</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+
+
+<p>Ou pela instância do Model:</p>
+<div class="highlight"><pre><span class="cp">{%</span> <span class="k">load</span> <span class="nv">ssiexport_tags</span> <span class="cp">%}</span><span class="x"></span>
+
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">image</span> <span class="k">in</span> <span class="nv">object.image_set.all</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">watch</span> <span class="nv">image</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    &lt;img src=&quot;</span><span class="cp">{{</span> <span class="nv">image.file.url</span> <span class="cp">}}</span><span class="x">&quot; /&gt;</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="x"></span>
+
+<span class="x">class Post(models.Model):</span>
+<span class="x">    pass</span>
+</pre></div>
+
+
+<p>A templatetag <strong>watch</strong> irá cuidar de declarar que aquele o conteúdo daquele model interfere no conteúdo renderizado (estático) para aquela URL.</p>
+<p>A declaração de <strong>templates</strong> usadas é feita de forma automática da mesma forma que os
+tests do django fazem.</p>
+<p>Bem, esta á a idéia de primeira release, como ela irá funcionar. Criarei mais posts
+sobre como iremos trabalhar o restante das idéias.</p>
+            </div><!-- /.entry-content -->
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+
+<h4>Pages</h4>
+
+ <ul>
+      <li><a href="./pages/about.html">About</a></li>
+  </ul>
+
+<h4>Categories</h4>
+<ul>
+		<li><a href="./category/django.html">Django</a></li>
+		<li><a href="./category/misc.html">misc</a></li>
+</ul>
+
+
+  <h4>Tags</h4>
+	<ul>
+  	    <li class="tag-4"><a href="./tag/hightraffic.html">hightraffic</a></li>
+  </ul>
+
+
+
+
+<nav class="widget">
+  <h4>Links</h4>
+  <ul>
+    <li><a href="http://github.com/mauler">My GITHUB</a></li>
+    <li><a href="http://oppsproject.org/">OPPS Project</a></li>
+    <li><a href="http://github.com/mauler/django-grappelli-extensions">django-grappelli-extensions</a></li>
+    <li><a href="http://github.com/mauler/django-placeholder">django-placeholder</a></li>
+  </ul>
+</nav>
+
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+  <script src="./theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="./theme/js/libs/gumby.min.js"></script>
+  <script src="./theme/js/plugins.js"></script>
+</body>
+</html>
