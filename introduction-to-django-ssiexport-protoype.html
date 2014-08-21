@@ -105,26 +105,23 @@ templates usadas para gerar o conteúdo estático e os models relacionados aquel
 <p>Para declarar que as instâncias de <strong>Image</strong> estão relacionadas ao <strong>Post</strong> na template
 <em>post_detail.html</em> podemos declarar de duas formas.</p>
 <p>Usando queryset:</p>
-<div class="highlight"><pre><span class="cp">{%</span> <span class="k">load</span> <span class="nv">ssiexport_tags</span> <span class="cp">%}</span><span class="x"></span>
+<div class="highlight"><pre><span class="cp">{%</span> <span class="k">load</span> <span class="nv">ssiexport_tags</span> <span class="cp">%}</span>
 
-<span class="cp">{%</span> <span class="k">watch</span> <span class="nv">post.image_set.all</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">watch</span> <span class="nv">post.image_set.all</span> <span class="cp">%}</span>
 
-<span class="cp">{%</span> <span class="k">for</span> <span class="nv">image</span> <span class="k">in</span> <span class="nv">object.image_set.all</span> <span class="cp">%}</span><span class="x"></span>
-<span class="x">    &lt;img src=&quot;</span><span class="cp">{{</span> <span class="nv">image.file.url</span> <span class="cp">}}</span><span class="x">&quot; /&gt;</span>
-<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">image</span> <span class="k">in</span> <span class="nv">object.image_set.all</span> <span class="cp">%}</span>
+    <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">image.file.url</span> <span class="cp">}}</span><span class="s">&quot;</span> <span class="nt">/&gt;</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
 </pre></div>
 
 
 <p>Ou pela instância do Model:</p>
-<div class="highlight"><pre><span class="cp">{%</span> <span class="k">load</span> <span class="nv">ssiexport_tags</span> <span class="cp">%}</span><span class="x"></span>
+<div class="highlight"><pre><span class="cp">{%</span> <span class="k">load</span> <span class="nv">ssiexport_tags</span> <span class="cp">%}</span>
 
-<span class="cp">{%</span> <span class="k">for</span> <span class="nv">image</span> <span class="k">in</span> <span class="nv">object.image_set.all</span> <span class="cp">%}</span><span class="x"></span>
-<span class="x">    </span><span class="cp">{%</span> <span class="k">watch</span> <span class="nv">image</span> <span class="cp">%}</span><span class="x"></span>
-<span class="x">    &lt;img src=&quot;</span><span class="cp">{{</span> <span class="nv">image.file.url</span> <span class="cp">}}</span><span class="x">&quot; /&gt;</span>
-<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="x"></span>
-
-<span class="x">class Post(models.Model):</span>
-<span class="x">    pass</span>
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">image</span> <span class="k">in</span> <span class="nv">object.image_set.all</span> <span class="cp">%}</span>
+    <span class="cp">{%</span> <span class="k">watch</span> <span class="nv">image</span> <span class="cp">%}</span>
+    <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">image.file.url</span> <span class="cp">}}</span><span class="s">&quot;</span> <span class="nt">/&gt;</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
 </pre></div>
 
 
